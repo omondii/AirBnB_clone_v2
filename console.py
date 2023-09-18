@@ -10,6 +10,8 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 
 class HBNBCommand(cmd.Cmd):
@@ -113,17 +115,41 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
-    def do_create(self, args):
+    def do_create(self, arg):
         """ Create an object of any class"""
-        if not args:
+        if not arg:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
+        args = arg.split()
+        class_name = args[0]
+        params = args[1:]
+
+        if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[args]()
+        else:
+            param_dict = {}
+            for param in params:
+                param_key, param_value = param.split("=")
+                if param_value.startswith('"') and param_value.endswith('"'):
+                    param_value = param_value.strip('"').replace('_', ' ')
+                    #print(param_value)
+                elif '.' in param_value:
+                    try:
+                        param_value = float(param_value)
+                    except ValueError:
+                        pass
+                else:
+                    try:
+                        param_value = int(param_value)
+                    except ValueError:
+                        pass
+                param_dict[param_key] = param_value
+        print(param_dict)
+
+        new_instance = HBNBCommand.classes[class_name](param_dict)
         storage.save()
-        print(new_instance.id)
+        print(arg)
         storage.save()
 
     def help_create(self):
