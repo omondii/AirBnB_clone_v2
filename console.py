@@ -145,11 +145,9 @@ class HBNBCommand(cmd.Cmd):
                     except ValueError:
                         pass
                 param_dict[param_key] = param_value
-        print(param_dict)
-
-        new_instance = HBNBCommand.classes[class_name](param_dict)
+        new_instance = HBNBCommand.classes[class_name](**param_dict)
         storage.save()
-        print(arg)
+        print(new_instance.id)
         storage.save()
 
     def help_create(self):
