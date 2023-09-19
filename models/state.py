@@ -1,8 +1,10 @@
 #!/usr/bin/python3
 """ State Module for HBNB project """
-from models.base_model import BaseModel
+from models.base_model import BaseModel, ForeignKey
+from sqlalchemy import Column
+from sqlalchemy import relationship
 
-
-class State(BaseModel):
+class State(BaseModel, Base):
     """ State class """
-    name = ""
+    __tablename__ = 'cities'
+    name = Column(String(128), nullable=False)
