@@ -43,8 +43,7 @@ class DBStorage:
         self.__engine = create_engine(dbUrl, pool_pre_ping=True)
         if getenv('HBNB_ENV ') == 'test':
             # Drop all tables if in test environment
-            metadata = metaData()
-            metadata.drop_all(bind=engine)
+            Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         """
@@ -94,3 +93,9 @@ class DBStorage:
         newSesh = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(newSesh)
         self.__session = Session()
+
+    def close(self):
+        """
+        Close the current SQLAlchemy session
+        """
+        self.__session.close()
