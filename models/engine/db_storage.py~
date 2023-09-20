@@ -1,0 +1,27 @@
+#!/usr/bin/python3
+"""
+Imported modules
+os
+sqlalchemy
+"""
+from sqlalchemy import create_engine, Column, String
+from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.ext.declarative import declarative_base
+
+
+class DBStorage:
+    """
+    create link between app and mysql via MYSQLAlchemy
+    Params:
+     _engine: private class attribute-specify db engine
+     _session: ''     ''     ''  - create/start session
+    """
+    __engine = None
+    __session = None
+
+    def __init__(self):
+        """
+        Creates the engine and links to hbnb_dev and hbnb_dev_db:
+        hbnb_dev - db and hbnb_dev_db - user
+        """
+        self.__engine =
