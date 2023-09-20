@@ -2,6 +2,7 @@
 """ Console Module """
 import cmd
 import sys
+import models
 from models.base_model import BaseModel
 from models.__init__ import storage
 from models.user import User
@@ -10,6 +11,9 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
+import uuid
+from datetime import datetime
+
 
 
 class HBNBCommand(cmd.Cmd):
@@ -125,28 +129,25 @@ class HBNBCommand(cmd.Cmd):
         if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        else:
-            param_dict = {}
-            for param in params:
-                param_key, param_value = param.split("=")
-                if param_value.startswith('"') and param_value.endswith('"'):
-                    param_value = param_value.strip('"').replace('_', ' ')
-                    # print(param_value)
-                elif '.' in param_value:
-                    try:
-                        param_value = float(param_value)
-                    except ValueError:
-                        pass
-                else:
-                    try:
-                        param_value = int(param_value)
-                    except ValueError:
-                        pass
-                param_dict[param_key] = param_value
-        new_instance = HBNBCommand.classes[class_name](**param_dict)
-        storage.save()
-        print(new_instance.id)
-        storage.save()
+
+        new_instance = HBNBCommand.classes[class_name]()
+        for param in params:
+            argv = param.split("=")
+
+            attrName = argv[0]
+            attrValue = argv[1]
+
+            attrValue = attrValue.strip('"').replace('_', ' ')
+
+            if '.' in attrValue and attrName != 'email':
+                attrValue = float(attrValue)
+            elif attrValue.isdigit():
+                attrValue = int(attrValue)
+            else:
+                setattr(new_instance, attrName, attrValue)
+
+            new_instance.save()
+            print(new_instance.id)
 
     def help_create(self):
         """ Help information for the create method """
@@ -228,14 +229,16 @@ class HBNBCommand(cmd.Cmd):
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for k, v in storage._FileStorage__objects.items():
+
+            for k, v in storage.all(HBNBCommand.classes[args]).items():
                 if k.split('.')[0] == args:
                     print_list.append(str(v))
         else:
-            for k, v in storage._FileStorage__objects.items():
+            for k, v in storage.all():
                 print_list.append(str(v))
 
         print(print_list)
+
 
     def help_all(self):
         """ Help information for the all command """
