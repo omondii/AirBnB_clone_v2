@@ -7,6 +7,7 @@ sqlalchemy
 from sqlalchemy import create_engine, Column, String, MetaData
 from sqlalchemy.orm import sessionmaker, relationship, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
+import os
 from os import getenv
 from models.base_model import BaseModel, Base
 from models.amenity import Amenity
@@ -33,12 +34,12 @@ class DBStorage:
         hbnb_dev - db and hbnb_dev_db - user
         """
         # Retrieving MySQL connection details from environment variables
-        mysqlUSer = os.getenv('HBNB_MYSQL_USER ')
+        mysqlUser = os.getenv('HBNB_MYSQL_USER')
         mysqlPwd = os.getenv('HBNB_MYSQL_PWD')
-        mysqlHost = os.getenv('HBNB_MYSQL_HOST ')
-        mysqlDb = os.getenv('HBNB_MYSQL_DB ')
+        mysqlHost = os.getenv('HBNB_MYSQL_HOST')
+        mysqlDb = os.getenv('HBNB_MYSQL_DB')
 
-        dbUrl = f'mysql+mysqldb://{myqlUser}:{mysqlpwd}@{mysqlHost}:/{mysqlDb}'
+        dbUrl = f'mysql+mysqldb://{mysqlUser}:{mysqlPwd}@{mysqlHost}/{mysqlDb}'
 
         self.__engine = create_engine(dbUrl, pool_pre_ping=True)
         if getenv('HBNB_ENV ') == 'test':
@@ -89,7 +90,7 @@ class DBStorage:
         Create all tables in the database
         Create the current database session
         """
-        Base.metada.create_all(self.__engine)
+        Base.metadata.create_all(self.__engine)
         newSesh = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(newSesh)
         self.__session = Session()
