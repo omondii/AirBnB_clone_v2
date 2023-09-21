@@ -15,9 +15,11 @@ class City(BaseModel, Base):
       state_id - column containing a string (60 characters).
     """
     __tablename__ = 'cities'
-    if os.getenv("HBNB_TYPE_STORAGE") == "db":
-        name = Column(String(128), nullable=False)
-        state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
+    name = Column(String(128), nullable=False)
+    state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
 
-        places = relationship('Place', back_populates='cities',
-                              cascade='all, delete, delete-orphan')
+    state = relationship('State', back_populates='cities')
+    places = relationship('Place', backref='cities',
+                          cascade='all, delete, delete-orphan')
+       # amenities = relationship('Amenity', secondary=associationTable,
+                            # back_populates='place_amenities')
