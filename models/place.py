@@ -23,52 +23,53 @@ associationTable = Table('place_amenity', Base.metadata,
 class Place(BaseModel, Base):
     """ A place to stay """
     __tablename__ = 'places'
-    city_id = Column(String(128), ForeignKey('cities.id'), nullable=False)
-    user_id = Column(String(128), ForeignKey('users.id'), nullable=False)
-    name = Column(String(128), nullable=False)
-    description = Column(String(128), nullable=True)
-    number_rooms = Column(Integer, nullable=False, default=0)
-    max_guest = Column(Integer, nullable=False, default=0)
-    price_by_night = Column(Integer, nullable=False, default=0)
-    latitude = Column(Float, nullable=True)
-    longitude = Column(Float, nullable=True)
-
-    reviews = relationship('Review', back_populates='place',
-                           cascade='all, delete-orphan')
-    amenities = relationship('Amenity', secondary=associationTable,
-                             back_populates='place_amenities')
-    amenity_ids = []
-
     if os.getenv('HBNB_TYPE_STORAGE') == 'db':
-        @property
-        def reviews(self):
-            """
-            Get reviews and build a list
-            """
-            from models import storage
-            reviewsList = []
-            data = storage.all(Review)
-            for review in data.values():
-                if review.place_id == self.id:
-                    reviewsList.append(review)
+        city_id = Column(String(128), ForeignKey('cities.id'), nullable=False)
+        user_id = Column(String(128), ForeignKey('users.id'), nullable=False)
+        name = Column(String(128), nullable=False)
+        description = Column(String(128), nullable=True)
+        number_rooms = Column(Integer, nullable=False, default=0)
+        max_guest = Column(Integer, nullable=False, default=0)
+        price_by_night = Column(Integer, nullable=False, default=0)
+        latitude = Column(Float, nullable=True)
+        longitude = Column(Float, nullable=True)
+
+        reviews = relationship('Review', backref='place',
+                               cascade='all, delete-orphan')
+        amenities = relationship('Amenity', secondary=associationTable,
+                                 backref='place_amenities')
+        amenity_ids = []
+
+
+    @property
+    def reviews(self):
+        """
+        Get reviews and build a list
+        """
+        from models import storage
+        reviewsList = []
+        data = storage.all(Review)
+        for review in data.values():
+            if review.place_id == self.id:
+                reviewsList.append(review)
             return reviewsList
 
-        @property
-        def amenities(self):
-            """
-            Get amenities
-            """
-            from models import storage
-            amenities = []
-            data = storage.all(Amenity)
-            for amenity in data.values():
-                amenities.append(amenity)
-            return amenities
+    @property
+    def amenities(self):
+        """
+        Get amenities
+        """
+        from models import storage
+        amenities = []
+        data = storage.all(Amenity)
+        for amenity in data.values():
+            amenities.append(amenity)
+        return amenities
 
-        @amenities.setter
-        def amenities(self,obj):
-            """
-            Setter for amenities
-            """
-            if isinstance(obj, Amenity):
-                self.amenity_ids.append(obj.id)
+    @amenities.setter
+    def amenities(self,obj):
+        """
+        Setter for amenities
+        """
+        if isinstance(obj, Amenity):
+            self.amenity_ids.append(obj.id)
