@@ -5,7 +5,7 @@ from sqlalchemy import Column, String
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 from models.review import Review
-
+import os
 
 class User(BaseModel, Base):
     """This class defines a user by various attributes
@@ -18,12 +18,13 @@ class User(BaseModel, Base):
     """
 
     __tablename__ = 'users'
+    if os.environ.get("HBNB_TYPE_STORAGE") == 'db':
+        email = Column(String(128), nullable=True)
+        password = Column(String(128), nullable=True)
+        first_name = Column(String(128), nullable=True)
+        last_name = Column(String(128), nullable=True)
 
-    email = Column(String(128), nullable=True)
-    password = Column(String(128), nullable=True)
-    first_name = Column(String(128), nullable=True)
-    last_name = Column(String(128), nullable=True)
-
-    places = relationship('Place', cascade='all,delete', back_populates='user')
-    reviews = relationship('Review', back_populates='user',
-                           cascade='all,delete-orphan')
+        places = relationship('Place', cascade='all,delete',
+                              back_populates='user')
+        reviews = relationship('Review', back_populates='user',
+                               cascade='all,delete-orphan')

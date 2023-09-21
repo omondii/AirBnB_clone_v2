@@ -4,7 +4,7 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
-
+import os
 
 class City(BaseModel, Base):
     """
@@ -15,10 +15,9 @@ class City(BaseModel, Base):
       state_id - column containing a string (60 characters).
     """
     __tablename__ = 'cities'
+    if os.getenv("HBNB_TYPE_STORAGE") == "db":
+        name = Column(String(128), nullable=False)
+        state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
 
-    name = Column(String(128), nullable=False)
-    state_id = Column(String(60), ForeignKey("states.id"), nullable=False)
-
-    state = relationship('State', back_populates='cities')
-    places = relationship('Place', back_populates='cities',
-                          cascade='all, delete, delete-orphan')
+        places = relationship('Place', back_populates='cities',
+                              cascade='all, delete, delete-orphan')

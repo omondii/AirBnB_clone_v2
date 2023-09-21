@@ -14,13 +14,13 @@ class State(BaseModel, Base):
     name = Column(String(128), nullable=False)
 
     # Define relationships for DBStorage
-    cities = relationship('City', back_populates='state', cascade='delete')
+    cities = relationship('City', back_populates='state',
+                          cascade='all, delete-orphan')
 
 
     # Getter att for FileStorage
     # If the env is not HB..- app doesn't use any db for storage this
     # is executed
-
     if getenv("HBNB_TYPE_STORAGE") != "db":
         @property
         def cities(self):
