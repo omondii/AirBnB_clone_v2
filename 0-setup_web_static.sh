@@ -3,7 +3,6 @@
 # Installing nginx if its not installed
 if ! command -v nginx &> /dev/null; then
     echo "Nginx is installed"
-    continue
 else
     sudo apt-get update
     sudo apt-get install -y nginx
@@ -71,7 +70,7 @@ echo 'Ownership permissions changed'
 # serve the content of /data/web_static/current/ to hbnb_static
 config_file='/etc/nginx/sites-available/web_static'
 if [ -f $config_file ]; then
-    echo 'server {
+    echo "server {
       listen *:80;
       location /hbnb_static/ {
       	       alias $webstatic_dir/current/;
@@ -80,7 +79,7 @@ if [ -f $config_file ]; then
       	       add_header X-served-By $HOSTNAME;
 	       root /usr/share/nginx/html;
       }
- }' | sudo tee $config_file > /dev/null
+ }" | sudo tee $config_file > /dev/null
     sudo ln -sf $config_file '/etc/nginx/sites-enabled/'
     echo 'Nginx configuration created and enabled'
 fi
