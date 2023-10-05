@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # Installing nginx if its not installed
 if ! command -v nginx &> /dev/null; then
     echo "Nginx is installed"
@@ -80,11 +79,11 @@ if [ -f $config_file ]; then
 	       root /usr/share/nginx/html;
       }
  }" | sudo tee $config_file > /dev/null
-    sudo ln -sf $config_file '/etc/nginx/sites-enabled/'
+    sudo ln -sf $config_file '/etc/nginx/sites-available/default'
     echo 'Nginx configuration created and enabled'
 fi
 
 sudo nginx -t
-sudo systemctl reload nginx
+sudo systemctl restart nginx
 
 echo "Succesfull configuration and update of Nginx"
