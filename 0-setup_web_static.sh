@@ -67,20 +67,12 @@ echo 'Ownership permissions changed'
 
 # Nginx server config.
 # serve the content of /data/web_static/current/ to hbnb_static
-config_file='/etc/nginx/sites-available/web_static'
-if [ -f $config_file ]; then
-    echo "server {
-      listen *:80;
-      location /hbnb_static/ {
-      	       alias $webstatic_dir/current/;
-      }
-      location / {
-      	       add_header X-served-By $HOSTNAME;
-	       root /usr/share/nginx/html;
-      }
- }" | sudo tee $config_file > /dev/null
-    sudo ln -sf $config_file '/etc/nginx/sites-available/default'
-    echo 'Nginx configuration created and enabled'
+config_file="/etc/nginx/sites-available/default"
+nginx_config="location /hbnb_static/ {
+    alias $webstatic_dir/current/;
+}"
+if ! grep -q "$nginx_config" "$config_file"; then
+	sudo sed -i "/server_name _;/a $nginx_config" "$config_file"
 fi
 
 sudo nginx -t
