@@ -10,19 +10,19 @@ from fabric import task
 from fabric.api import local
 from datetime import datetime
 
-@task
+
 def do_pack():
     """ Functions to compress web static directory
     Return - none on fail
     """
-    now = datetime.now().strftime('%Y%m%d%H%M%S')
-    archive_name = f"web_static_{now}.tgz"
-    archive_path = 'versions/$archive_name'
-    # Create the archive
-    local('mkdir -p versions/')
-    result = local(f'tar -cvzf {archive_path} web_static/')
+    now = datetime.now().strftime("%Y%m%d%H%M%S")
+    local("mkdir -p versions")
 
-    # Check if succesful
+    archive_name = "versions/web_static_{}.tgz".format(now)
+    result = local("tar -czvf {} web_static".format(archive_name))
+
     if result.succeeded:
-        return archive_path
-    return None
+        print("web_static packed: {} -> {}Bytes".format(archive_name, result.stdout.strip()))
+        return archive_name
+    else:
+        return None
