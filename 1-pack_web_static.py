@@ -12,8 +12,12 @@ from datetime import datetime
 
 
 def do_pack():
-    """ Functions to compress web static directory
+    """
+    Function to compress web static directory
     Return - none on fail
+    params:
+      now - time of creation
+      archive_name - formated name of the out archive name
     """
     now = datetime.now().strftime("%Y%m%d%H%M%S")
     local("mkdir -p versions")
