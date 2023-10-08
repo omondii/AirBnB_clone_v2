@@ -6,7 +6,6 @@ Imported modules
 fabric api
 dattime
 """
-from fabric import task
 from fabric.api import local
 from datetime import datetime
 
