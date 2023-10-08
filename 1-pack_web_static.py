@@ -20,14 +20,14 @@ def do_pack():
       archive_name - formated name of the out archive name
     """
 
-    now = datetime.now().strftime("%Y%m%d%H%M%S")
-    local("mkdir -p versions")
+    try:
+        now = datetime.now().strftime("%Y%m%d%H%M%S")
+        local("mkdir -p versions")
 
-    archive_name = "versions/web_static_{}.tgz".format(now)
-    result = local("tar -czvf {} web_static".format(archive_name))
+        archive_name = "versions/web_static_{}.tgz".format(now)
+        result = local("tar -czvf {} web_static".format(archive_name))
 
-    if result.succeeded:
         print("web_static packed: {} -> {}Bytes".format(archive_name, result.stdout.strip()))
         return archive_name
-    else:
+    except Exception:
         return None
