@@ -19,6 +19,7 @@ def do_pack():
       now - time of creation
       archive_name - formated name of the out archive name
     """
+
     now = datetime.now().strftime("%Y%m%d%H%M%S")
     local("mkdir -p versions")
 
