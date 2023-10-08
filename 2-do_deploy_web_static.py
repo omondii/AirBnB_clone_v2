@@ -33,12 +33,12 @@ def do_deploy(archive_path):
         archive_name = os.path.basename(archive_path)
         folder_name = archive_filename[:-7]
         with cd(remote_server):
-            run(f"mkdir -p {folder_name}")
-            run(f"tar -xcf {os.path.join(remote_server, archive_name)} -c {folder_name}")
+            run("mkdir -p {folder_name}".format(folder_name))
+            run("tar -xcf {} -c {}".format(os.path.join(remote_server, archive_name), folder_name))
 
-        run(f"rm {os.path.join(remote_server, archive_filename)}")
-        sudo(f"rm -f {current_dir}")
-        sudo(f"ln -s {os.path.join(remote_release, folder_name)} {current_dir}")
+        run("rm {}".format(os.path.join(remote_server, archive_name)))
+        sudo("rm -f {}".format(current_dir))
+        sudo("ln -s {} {}".format(os.path.join(remote_release, folder_name), current_dir))
         return True
 
     except Exception as e:
