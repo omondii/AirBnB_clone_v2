@@ -7,7 +7,7 @@ local
 datetime
 """
 import os
-from fabric.api import local
+from fabric.api import local, env
 from datetime import datetime
 from fabric.operations import put, run
 from fabric.context_managers import cd
