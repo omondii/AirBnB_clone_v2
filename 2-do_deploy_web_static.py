@@ -7,13 +7,14 @@ local
 datetime
 """
 import os
-from fabric.api import local, env
+from fabric.api import *
 from datetime import datetime
 from fabric.operations import put, run
 from fabric.context_managers import cd
 
 
-env.hosts = ['34.227.89.98 web-01', '107.22.144.156 web-02']
+env.hosts = ['34.227.89.98', '107.22.144.156']
+
 def do_deploy(archive_path):
     """
     Transfer the .tar.gz file to remote servers.
@@ -25,7 +26,6 @@ def do_deploy(archive_path):
         return False
 
     remote_server = "/tmp/"
-    remote_release = "/data/web_static/releases/"
     current_dir = "/data/web_static/current"
 
     try:
@@ -33,6 +33,7 @@ def do_deploy(archive_path):
 
         archive_name = os.path.basename(archive_path)
         folder_name = archive_filename[:-7]
+        remote_release = "/data/web_static/releases/web_static_{}/".format(archive_name)
         with cd(remote_server):
             run("mkdir -p {folder_name}".format(folder_name))
             run("tar -xcf {} -c {}".format(os.path.join(remote_server, archive_name), folder_name))
