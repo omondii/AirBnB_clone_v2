@@ -14,33 +14,30 @@ from fabric.context_managers import cd
 
 
 env.hosts = ['34.227.89.98', '107.22.144.156']
-
 def do_deploy(archive_path):
     """
     Transfer the .tar.gz file to remote servers.
     Params:
-      local_arch - path to the local archive file
-      remote_server - servers to deploy the prog to
+      archive_path - path to the local archive file
     """
     if not os.path.exists(archive_path):
         return False
 
     remote_server = "/tmp/"
-    current_dir = "/data/web_static/current"
 
     try:
         put(archive_path, remote_server)
 
         archive_name = os.path.basename(archive_path)
-        folder_name = archive_filename[:-7]
-        remote_release = "/data/web_static/releases/web_static_{}/".format(archive_name)
+        folder_name = archive_name[:-7]
+        remote_release = "/data/web_static/releases/web_static_{}/".format(folder_name)
         with cd(remote_server):
-            run("mkdir -p {folder_name}".format(folder_name))
-            run("tar -xcf {} -c {}".format(os.path.join(remote_server, archive_name), folder_name))
+            run("mkdir -p {}".format(folder_name))
+            run("tar -xzf {} -C {}".format(archive_name, folder_name))
 
         run("rm {}".format(os.path.join(remote_server, archive_name)))
-        sudo("rm -f {}".format(current_dir))
-        sudo("ln -s {} {}".format(os.path.join(remote_release, folder_name), current_dir))
+        sudo("rm -f /data/web_static/current")
+        sudo("ln -s {} /data/web_static/current".format(remote_release))
         return True
 
     except Exception as e:
