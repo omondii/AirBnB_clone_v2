@@ -20,25 +20,38 @@ def do_deploy(archive_path):
     Params:
       archive_path - path to the local archive file
     """
-    if not os.path.exists(archive_path):
-        return False
-
-    remote_server = "/tmp/"
-
     try:
-        put(archive_path, remote_server)
+        if not os.path.exists(archive_path):
+            return False
 
-        archive_name = os.path.basename(archive_path)
-        folder_name = archive_name[:-7]
-        remote_release = "/data/web_static/releases/web_static_{}/".format(folder_name)
-        with cd(remote_server):
-            run("mkdir -p {}".format(folder_name))
-            run("tar -xzf {} -C {}".format(archive_name, folder_name))
+        # Upload file to remote location
+        put(archive_path, '/tmp/')
 
-        run("rm {}".format(os.path.join(remote_server, archive_name)))
-        sudo("rm -f /data/web_static/current")
-        sudo("ln -s {} /data/web_static/current".format(remote_release))
-        return True
+        # Create the destination folder, omit timestamp
+        archive_name = archive_path[18:-4]
+        run('sudo mkdir -p /data/web_static/releases/web_static_{}'\
+            .format(archive_name))
 
-    except Exception as e:
-        return False
+        # Uncompress archive
+        run('sudo tar -xzf /tmp/web_static_{}.tgz -C /data/web_static/releases/\
+        web_static_{}'.format(archive_name, archive_name))
+
+        # Delete archive from server
+        run('sudo rm /tmp/web_static_{}.tgz'.format(archive_name))
+
+        # move files to into host web_static
+        run('sudo mv /data/web_static/releases/web_static_{}/web_static/*\
+ /data/web_static/releases/web_static_{}/.format(archive_name, archive_name)')
+
+        # Delete extra web_static directory
+        run('sudo rm rf /data/web_static/current')
+
+        # Delete pre-existing symbolic link
+        run ('sudo rm -rf /data/web_static/current')
+
+        # Re-create symbiolic link
+        run('sudo ln -s /data/web_static/releases/web_static_{}/\
+/data/web_static/current'.format(archive_name))
+except:
+    return False
+return True
