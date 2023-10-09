@@ -40,8 +40,7 @@ def do_deploy(archive_path):
         run('sudo rm /tmp/web_static_{}.tgz'.format(archive_name))
 
         # move files to into host web_static
-        run('sudo mv /data/web_static/releases/web_static_{}/web_static/*\
- /data/web_static/releases/web_static_{}/.format(archive_name, archive_name)')
+        run('sudo mv /data/web_static/releases/web_static_{}/web_static/* /data/web_static/releases/web_static_{}/.format(archive_name, archive_name)')
 
         # Delete extra web_static directory
         run('sudo rm rf /data/web_static/current')
@@ -50,8 +49,7 @@ def do_deploy(archive_path):
         run ('sudo rm -rf /data/web_static/current')
 
         # Re-create symbiolic link
-        run('sudo ln -s /data/web_static/releases/web_static_{}/\
-/data/web_static/current'.format(archive_name))
+        run('sudo ln -s /data/web_static/releases/web_static_{}/ /data/web_static/current'.format(archive_name))
       except:
           return False
       return True
