@@ -50,6 +50,6 @@ def do_deploy(archive_path):
 
         # Re-create symbiolic link
         run('sudo ln -s /data/web_static/releases/web_static_{}/ /data/web_static/current'.format(archive_name))
-      except:
-          return False
-      return True
+    except:
+        return False
+    return True
