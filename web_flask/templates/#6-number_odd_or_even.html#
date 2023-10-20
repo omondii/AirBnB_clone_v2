@@ -1,0 +1,11 @@
+<!DoCTYPE html>
+<HTML lang="en">
+  <HEAD>
+    <TITLE>HBNB</TITLE>
+  </HEAD>
+  <BODY>
+    <H1>
+      {{   }}
+    </H1>
+   </BODY>
+</HTML>
