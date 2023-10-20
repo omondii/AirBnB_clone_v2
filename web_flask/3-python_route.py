@@ -1,6 +1,6 @@
-#!/usr/bin/python3
+#!/ist/bin/python3
 """
-Imported modules:
+Imported modules
 flask
 """
 from flask import Flask
@@ -14,7 +14,7 @@ def hello():
 
 
 @app.route("/hbnb", strict_slashes=False)
-def hnbn():
+def hbnb():
     return "HBNB"
 
 
@@ -24,5 +24,12 @@ def text(text):
     return f"C {text}"
 
 
+@app.route("/python/", defaults={'text': 'is cool'}, strict_slashes=False)
+@app.route("/python/<text>", strict_slashes=False)
+def python(text):
+    text = text.replace("_", " ")
+    return f"Python {text}"
+
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)
