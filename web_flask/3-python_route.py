@@ -1,4 +1,4 @@
-#!/ist/bin/python3
+#!/usr/bin/python3
 """
 Imported modules
 flask
