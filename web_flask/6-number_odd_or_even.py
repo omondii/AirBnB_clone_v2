@@ -50,7 +50,7 @@ def template(n):
 @app.route("/number_odd_or_even/<int:n>", strict_slashes=False)
 def oddEven(n):
     if isinstance(n, int):
-        return render_template('6-number_odd_or_even.html')
+        return render_template('6-number_odd_or_even.html', number=n)
     else:
         return "Not a valid number"
 
