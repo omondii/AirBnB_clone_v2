@@ -1,10 +1,9 @@
-#!/usr/bin/python3
+x#!/usr/bin/python3
 """
 Imported modules
 flask
-render_template
 """
-from flask import Flask, render_template
+from flask import Flask
 
 app = Flask(__name__)
 
@@ -30,22 +29,6 @@ def text(text):
 def python(text):
     text = text.replace("_", " ")
     return f"Python {text}"
-
-
-@app.route("/number/<int:n>", strict_slashes=False)
-def number(n):
-    if isinstance(n, int):
-        return f"{n} is a number"
-    else:
-        return "Not a valid number"
-
-
-@app.route("/number_template/<int:n>", strict_slashes=True)
-def template(n):
-    if isinstance(n, int):
-        return render_template('5-number.html', number=n)
-    else:
-        return "Not a valid number"
 
 
 if __name__ == '__main__':
