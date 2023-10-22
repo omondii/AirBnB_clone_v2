@@ -99,4 +99,4 @@ class DBStorage:
         """
         Close the current SQLAlchemy session
         """
-        self.__session.close()
+        self.__session.remove()
